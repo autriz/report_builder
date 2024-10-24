@@ -11,6 +11,5 @@ export default defineConfig({
 
 	verbose: true,
 	strict: true,
-	driver: 'turso',
-	dialect: 'sqlite'
+	dialect: 'turso',
 });
