@@ -16,7 +16,9 @@ export const user = sqliteTable('users', {
 	passwordHash: text('password_hash').notNull(),
 	jobTitleId: text('job_title_id')
 		.references(() => job_title.id),
-	isRegistered: integer({mode:"boolean"}).notNull().default(false)
+	isRegistered: integer({mode:"boolean"}).notNull().default(false),
+	email: text('email')
+		.notNull()
 });
 
 export const session = sqliteTable('sessions', {
@@ -201,3 +203,5 @@ export type User = typeof user.$inferSelect;
 export type Role = typeof role.$inferSelect;
 
 export type Organization = typeof organization.$inferSelect;
+
+export type Project = typeof organization.$inferSelect;
