@@ -1,15 +1,39 @@
 <script lang="ts">
-    import { createUploader } from "$lib/utils/uploadthing";
-    import { Uploader } from "@uploadthing/svelte";
+	import { enhance } from '$app/forms';
+	import Table from '$lib/components/Table.svelte';
+	import { createUploader } from '$lib/utils/uploadthing';
+	import { Uploader } from '@uploadthing/svelte';
+	import Paparse from 'papaparse';
 
-    const uploader = createUploader("reportUploader", {
-        onClientUploadComplete: (res) => {
-            console.log(res[0]);
-        },
-        onUploadError: (err) => {
-            console.error(err);
-        }
-    })
+	const uploader = createUploader('reportUploader', {
+		onClientUploadComplete: (res) => {
+			console.log(res[0]);
+		},
+		onUploadError: (err) => {
+			console.error(err);
+		}
+	});
+
+	let input: HTMLInputElement;
+
+	let resultsState = $state<any>({});
+	let fields = $state<string[] | undefined>(undefined);
+
+	function doThing() {
+		Paparse.parse(input.files![0], {
+			dynamicTyping: true,
+			header: true,
+			complete(results, file) {
+				resultsState = results.data;
+				fields = results.meta.fields;
+			}
+		});
+	}
 </script>
 
-<Uploader {uploader} />
+<!-- <Uploader {uploader} /> -->
+<input type="file" bind:this={input} onchange={() => doThing()} max="1" />
+
+{#if resultsState && fields}
+	<Table data={resultsState} {fields} />
+{/if}
