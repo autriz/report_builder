@@ -1,7 +1,6 @@
-import { eq } from "drizzle-orm";
+import { eq, getTableColumns } from "drizzle-orm";
 import { db } from "../db";
 import { user as user_table, type User } from "../db/schema";
-import { z } from "zod";
 
 class UserService{
     async getUsers() {
@@ -10,9 +9,14 @@ class UserService{
     }
 
     async getUser(id: User["id"]){
-        return await db.select()
+
+        const {passwordHash, ...otherFields} = getTableColumns(user_table);
+
+        const [user] = await db.select(otherFields)
             .from(user_table)
             .where(eq(user_table.id, id));
+
+        return user != null ? user : null;
     }
 
     async putUser(user: User){
