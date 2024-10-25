@@ -183,7 +183,11 @@ export const department_projects = sqliteTable('departments_projects', {
 ;
 export const report = sqliteTable('reports', {
 	id: text('id').primaryKey(),
-	createdAt: text('created_at').default(sql`CURRENT_TIMESTAMP`)
+	createdAt: text('created_at').default(sql`CURRENT_TIMESTAMP`),
+	ownerId: text('owner_id')
+		.notNull()
+		.references(()=>user.id),
+	linkToFile: text('link_to_file')
 });
 
 export const project_reports = sqliteTable('projects_reports', {
