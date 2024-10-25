@@ -48,7 +48,7 @@ export const actions: Actions = {
 				return fail(400, { message: 'Данная почта занята' });
 			}
 
-			await db.insert(table.user).values({ id: userId, username, passwordHash });
+			await db.insert(table.user).values({ id: userId, username, email, passwordHash });
 
 			const session = await auth.createSession(userId);
 			event.cookies.set(auth.sessionCookieName, session.id, {

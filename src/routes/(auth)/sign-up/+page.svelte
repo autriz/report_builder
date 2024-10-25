@@ -27,7 +27,7 @@
 			class="bg-card border-border flex w-80 flex-col items-center rounded-md border p-5"
 			method="post"
 			use:enhance
-			action="?/register"
+			action="?/sign_up"
 		>
 			<h1 class="text-2xl">Регистрация</h1>
 			<div class="relative mt-10">
