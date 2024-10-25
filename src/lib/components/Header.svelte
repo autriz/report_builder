@@ -14,7 +14,7 @@
         <a href="/">Лого</a>
         <div class="flex flex-row items-center">
             <a class="mr-5" href="/login">Войти</a>
-            <a class="text-sm bg-primary p-2 my-2 rounded-md" href="/sign-up">Начать работу</a>
+            <a class="text-sm bg-primary p-2 my-2 rounded-md transition-colors hover:bg-primary/90" href="/sign-up"><b>Начать работу</b></a>
         </div>
     </header>
 {/if}

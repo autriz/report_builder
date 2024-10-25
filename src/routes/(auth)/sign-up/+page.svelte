@@ -26,7 +26,7 @@
 			transition:fly={{ y: -50, duration: 300, delay: 0 }}
 			class="bg-card border-border flex w-80 flex-col items-center rounded-md border p-5"
 			method="post"
-			use:enhance
+			use:enhance={() => { form = null; }}
 			action="?/sign_up"
 		>
 			<h1 class="text-2xl">Регистрация</h1>
@@ -98,7 +98,7 @@
 				>
 			</div>
 			<button
-				class="btn variant-filled disabled:bg-primary/60 bg-primary mt-10 rounded-md px-4 py-2"
+				class="btn variant-filled disabled:bg-primary/60 bg-primary mt-10 rounded-md px-4 py-2 transition-colors"
 				disabled={!allowed}
 				type="submit"
 			>

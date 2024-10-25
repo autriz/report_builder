@@ -6,7 +6,7 @@ import * as table from '$lib/server/db/schema';
 
 const DAY_IN_MS = 1000 * 60 * 60 * 24;
 
-export const sessionCookieName = 'auth-session';
+export const sessionCookieName = 'session';
 
 function generateSessionToken(): string {
 	const bytes = crypto.getRandomValues(new Uint8Array(20));

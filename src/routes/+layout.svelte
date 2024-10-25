@@ -1,5 +1,6 @@
 <script lang="ts">
-	import '../app.css';
+	import Cookies from '$lib/components/Cookies.svelte';
+import '../app.css';
 	import { ModeWatcher } from "mode-watcher";
 
 	let { children, data } = $props();
@@ -12,3 +13,5 @@
 		{@render children()}
 	</div>
 </div>
+
+<Cookies/>

@@ -21,7 +21,7 @@
 			transition:fly={{ y: -50, duration: 300, delay: 0 }}
 			class="bg-card border-border flex w-80 flex-col items-center rounded-md border p-5"
 			method="post"
-			use:enhance
+			use:enhance={() => { form = null; }}
 			action="?/login"
 		>
 			<h1 class="text-2xl">Вход</h1>
@@ -61,14 +61,14 @@
 					Пароль
 				</label>
 			</div>
+			<p class="text-red-600">{form?.message ?? ''}</p>
 			<button
-				class="btn variant-filled disabled:bg-primary/60 bg-primary mt-10 rounded-md px-4 py-2"
+				class="btn variant-filled disabled:bg-primary/60 bg-primary mt-10 rounded-md px-4 py-2 transition-colors"
 				disabled={!allowed}
 				type="submit"
 			>
 				Войти
 			</button>
-			<p class="text-red-600">{form?.message ?? ''}</p>
 		</form>
 		<p transition:fade={{ duration: 300 }} class="mt-10 text-center">
 			Нет аккаунта? <a class="text-primary" href="/sign-up">Зарегистрироваться</a>.
