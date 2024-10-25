@@ -199,3 +199,5 @@ export type Session = typeof session.$inferSelect;
 export type User = typeof user.$inferSelect;
 
 export type Role = typeof role.$inferSelect;
+
+export type Organization = typeof organization.$inferSelect;
