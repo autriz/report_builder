@@ -1,6 +1,6 @@
 import { eq, getTableColumns } from "drizzle-orm";
 import { db } from "../db";
-import { project as project_table, type Project } from "../db/schema";
+import { department_projects, project as project_table, type Project } from "../db/schema";
 
 class ProjectService{
     
@@ -12,7 +12,6 @@ class ProjectService{
             JOIN departments d ON dp.department_id = d.id
             WHERE d.organization_id = '${organization_id}';
         `
-        
     }
 
 }
