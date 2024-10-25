@@ -1,4 +1,5 @@
 import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
+import { z } from "zod";
 
 export const user = sqliteTable('user', {
 	id: text('id').primaryKey(),
@@ -34,3 +35,5 @@ export const user_roles = sqliteTable('user_roles', {
 export type Session = typeof session.$inferSelect;
 
 export type User = typeof user.$inferSelect;
+
+export type Role = typeof role.$inferSelect;
