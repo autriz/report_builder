@@ -1,8 +1,14 @@
 <script lang="ts">
 	import '../app.css';
-	let { children } = $props();
+	import { ModeWatcher } from "mode-watcher";
+
+	let { children, data } = $props();
 </script>
 
-<div class="w-screen h-screen bg-black text-white">
-	{@render children()}
+<ModeWatcher defaultMode="system" themeStorageKey="color-theme"  />
+
+<div class="min-w-screen h-fit min-h-[100dvh] max-w-full bg-background text-secondary-foreground">
+	<div class="relative flex flex-col min-h-screen">
+		{@render children()}
+	</div>
 </div>
