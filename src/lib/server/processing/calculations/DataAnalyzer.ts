@@ -80,7 +80,18 @@ class DataAnalyzer {
         });
         return uniqueValues.size;
     }
-    
+
+    calculateSum(data: ResultRow[], key: string): number {
+        let sum = 0;
+        data.forEach(row => {
+            const value = row[key];
+            if (typeof value === 'number') {
+                sum += value;
+            }
+        });
+        return sum;
+    }
+
 }
 
 export default new DataAnalyzer();
