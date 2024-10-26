@@ -5,7 +5,10 @@
 	import { createTable, Render, Subscribe, createRender } from 'svelte-headless-table';
 	import ChevronDown from 'lucide-svelte/icons/chevron-down';
 	import ChevronUp from 'lucide-svelte/icons/chevron-up';
-	import { readable } from 'svelte/store';
+	import { readable, writable } from 'svelte/store';
+	import type { Column } from '$lib/userStore.svelte';
+	import type { ResultRow } from '$lib/types';
+	
 	import {
 		addPagination,
 		addSortBy,
@@ -16,17 +19,18 @@
 		addResizedColumns
 	} from 'svelte-headless-table/plugins';
 
+
 	let {
 		data,
 		fields,
 		selectedDataIds = $bindable()
 	}: {
-		data: any[];
-		fields: string[];
+		data: ResultRow[];
+		fields: Column[];
 		selectedDataIds: (typeof pluginStates)['select']['selectedDataIds'];
 	} = $props();
 
-	let table = createTable(readable(data), {
+	let table = createTable(writable(data), {
 		page: addPagination({
 			initialPageSize: 14
 		}),
@@ -63,12 +67,12 @@
 	fields.map((val) => {
 		columnsArray.push(
 			table.column({
-				accessor: val,
+				accessor: val.value,
 				plugins: {
 					sort: { invert: true },
 					resize: {}
 				},
-				header: (cell, state) => val
+				header: (cell, state) => val.value
 			})
 		);
 	});
@@ -90,8 +94,36 @@
 			.map(([id, _]) => id);
 	});
 
-	console.log($headerRows);
+	
+	// export function removeRows (){
+	// 	$inspect(data[2]);
+	// 	for (let key in $selectedDataIds) {
+	// 		console.log("Key:", key);
+	// 		const index = data.indexOf(data[Number(key)]);
+	// 		console.log(Number(key));
+	// 		console.log(index);
+	// 		if (index > -1) {
+	// 			data.splice(index, 1);
+	// 		}
+	// 		$inspect(data[2]);
+	// 	}
+	// }
+	
+	for (let key in $selectedDataIds){
+		console.log("Key:", key);
+	}
+
+	console.log(Object.keys($selectedDataIds).length);
+	console.log($selectedDataIds);
 </script>
+
+<pre>{JSON.stringify(
+    {
+      $selectedDataIds: $selectedDataIds,
+    },
+    null,
+    2,
+  )}</pre>
 
 <div class="flex max-w-[1400px] flex-col">
 	<div class="flex items-center justify-end space-x-2 py-4">
@@ -114,6 +146,16 @@
 		>
 			Следующий
 		</Button>
+		<Button
+			variant="outline"
+			size="sm"
+			disabled={!$hasNextPage}
+			onclick={() => (console.log(Object.keys($selectedDataIds).length))}
+		>
+			size
+		</Button>
+
+
 	</div>
 	<div class="overflow-y-auto rounded-md border">
 		<Table.Root {...$tableAttrs}>

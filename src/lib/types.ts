@@ -1,0 +1,1 @@
+export type ResultRow = { [key: string[number]]: string | number | Date };
