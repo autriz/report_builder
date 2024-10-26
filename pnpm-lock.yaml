@@ -102,6 +102,9 @@ importers:
       svelte-check:
         specifier: ^4.0.0
         version: 4.0.5(svelte@5.1.0)(typescript@5.6.3)
+      svelte-dnd-action:
+        specifier: ^0.9.52
+        version: 0.9.52(svelte@5.1.0)
       tailwind-merge:
         specifier: ^2.5.4
         version: 2.5.4
@@ -2337,6 +2340,11 @@ packages:
       svelte: ^4.0.0 || ^5.0.0-next.0
       typescript: '>=5.0.0'
 
+  svelte-dnd-action@0.9.52:
+    resolution: {integrity: sha512-f841HB5PCcvp21jsMkxSXCXcsJcGmIPMguN6iI1gXqP9Owcb47+ZUIE5ETUzNJntE9h7dm1wFj2Bm51hRtQ7Lw==}
+    peerDependencies:
+      svelte: '>=3.23.0 || ^5.0.0-next.0'
+
   svelte-headless-table@0.18.2:
     resolution: {integrity: sha512-dnDTaXW5CNzRUjHVbc/Hb0Zv80zU4VcIUnAja6OuZriXvim1AqcWYQCHPRzBGwqj1m3YEHHNvspSzY0o5HzA0A==}
     peerDependencies:
@@ -4539,6 +4547,10 @@ snapshots:
       typescript: 5.6.3
     transitivePeerDependencies:
       - picomatch
+
+  svelte-dnd-action@0.9.52(svelte@5.1.0):
+    dependencies:
+      svelte: 5.1.0
 
   svelte-headless-table@0.18.2(svelte@5.1.0):
     dependencies:

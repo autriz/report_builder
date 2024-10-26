@@ -16,7 +16,15 @@
 		addResizedColumns
 	} from 'svelte-headless-table/plugins';
 
-	const { data, fields }: { data: any[]; fields: string[] } = $props();
+	let {
+		data,
+		fields,
+		selectedDataIds = $bindable()
+	}: {
+		data: any[];
+		fields: string[];
+		selectedDataIds: (typeof pluginStates)['select']['selectedDataIds'];
+	} = $props();
 
 	let table = createTable(readable(data), {
 		page: addPagination({
@@ -68,7 +76,7 @@
 	const { tableAttrs, headerRows, tableBodyAttrs, pageRows, pluginStates, flatColumns } =
 		table.createViewModel(columnsArray);
 
-	const { selectedDataIds } = pluginStates.select;
+	selectedDataIds = pluginStates.select.selectedDataIds;
 	const { sortKeys } = pluginStates.sort;
 	const { hiddenColumnIds } = pluginStates.hide;
 	const { pageIndex, pageCount, pageSize, hasPreviousPage, hasNextPage } = pluginStates.page;
@@ -85,7 +93,7 @@
 	console.log($headerRows);
 </script>
 
-<div class="flex w-[1400px] flex-col">
+<div class="flex max-w-[1400px] flex-col">
 	<div class="flex items-center justify-end space-x-2 py-4">
 		<div class="text-muted-foreground flex-1 text-sm">
 			{$pageIndex + 1} из {$pageCount} страниц.

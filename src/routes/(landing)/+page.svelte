@@ -1,3 +1,7 @@
+<script module>
+	export type ResultRow = { [key: string[number]]: string | number | Date };
+</script>
+
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import Dropzone from '$lib/components/Dropzone.svelte';
@@ -16,10 +20,16 @@
 		}
 	});
 
+	enum State {
+		Input,
+		Table,
+		Report
+	}
+
+	let appState = $state(State.Input);
+
 	let input: HTMLInputElement | undefined = $state(undefined);
 	let files: File[] = $state([]);
-
-	type ResultRow = { [key: string[number]]: string | number | Date };
 
 	let resultsState: ResultRow[] = $state([]);
 	let fields = $state<string[] | undefined>(undefined);
@@ -70,6 +80,7 @@
 				}
 			},
 			complete() {
+				appState = State.Table;
 				isParsing = false;
 			}
 		});
@@ -83,9 +94,15 @@
 </script>
 
 <div class="flex min-h-full min-w-full flex-col">
-	{#if resultsState && fields}
-		<TableEditor data={resultsState} {fields} />
-	{:else}
+	{#if appState === State.Table}
+		{#if resultsState && fields}
+			<TableEditor data={resultsState} {fields} />
+		{:else}
+			<p class="m-auto text-2xl">Не получилось обработать файл</p>
+		{/if}
+	{:else if appState === State.Report}
+		<p>todo</p>
+	{:else if appState === State.Input}
 		<Dropzone
 			{handleFiles}
 			disabled={isParsing}
