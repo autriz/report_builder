@@ -3,6 +3,8 @@
 	import SettingSection from './SettingSection.svelte';
 	import Table from './Table.svelte';
 	import { Button } from './ui/button';
+	import {removeRows} from '../utils/remove_rows';
+
 
 	const { data, fields }: { data: ResultRow[]; fields: string[] } = $props();
 
@@ -30,11 +32,14 @@
 		<section>
 			<Button variant="default" class="text-md" disabled>Add column</Button>
 		</section>
-		<section>
-			<Button variant="default" class="text-md" disabled>Remove selected</Button>
+		<!-- <section>
+			<Button variant="default" class="text-md" disabled={!$hasNextPage} onclick={removeRows()}>Unselect</Button>
 		</section>
 		<section>
-			<Button variant="default" class="text-md" disabled>Continue</Button>
+			<Button variant="outline" class="text-md" disabled={!$hasNextPage} onclick={removeRows()} >Remove selected </Button>
+		</section> -->
+		<section>
+			<Button variant="default" class="text-md" disabled >Continue</Button>
 		</section>
 	</div>
 </div>
