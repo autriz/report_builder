@@ -1,5 +1,4 @@
-
-
+import type FileHandler from "./FileHandler.interface";
 class CSVHandler implements FileHandler{
 
     upload(){
@@ -10,6 +9,9 @@ class CSVHandler implements FileHandler{
         
     }
 
+    generate(){
+        
+    }
 }
 
 export default new CSVHandler();

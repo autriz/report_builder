@@ -1,11 +1,16 @@
+import type FileHandler from "./FileHandler.interface";
 class JSONHandler implements FileHandler{
 
     upload(){
 
     }
 
-    fandle(){
+    handle(){
         
+    }
+    
+    generate(){
+
     }
 
 }
