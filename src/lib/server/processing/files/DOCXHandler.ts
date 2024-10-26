@@ -1,7 +1,7 @@
     import { Document, Packer, Table, TableCell, TableRow, Paragraph } from "docx";
     import fs from "fs";
     import path from "path";
-    import type TableRowData from "../types/TableRowData";
+    import type TableRowData from "../../types/TableRowData";
     import type FileHandler from "./FileHandler.interface";
 
     class DOCXHandler implements FileHandler{
@@ -10,7 +10,7 @@
 
         }
 
-        fandle(){
+        handle(){
             
         }
 

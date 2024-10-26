@@ -1,9 +1,9 @@
-import type TableRowData from "../types/TableRowData";
+import type TableRowData from "../../types/TableRowData";
 
 export default interface FileHandler {
     upload:()=>void;
 
-    fandle:()=>void;
+    handle:()=>void;
 
     generate: (data: TableRowData[], outputFilePath: string) => void;
 }

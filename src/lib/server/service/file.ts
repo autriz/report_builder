@@ -1,4 +1,4 @@
-import DOCXHandler from "../processing/DOCXHandler";
+import DOCXHandler from "../processing/files/DOCXHandler";
 import type TableRowData from "../types/TableRowData";
 
 export default class FileService {

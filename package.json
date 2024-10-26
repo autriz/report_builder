@@ -47,6 +47,7 @@
 		"@oslojs/encoding": "^1.1.0",
 		"@unovis/svelte": "^1.4.4",
 		"@uploadthing/svelte": "^7.1.0",
+		"axios": "^1.7.7",
 		"docx": "^9.0.2",
 		"drizzle-orm": "^0.35.0",
 		"nodemailer": "^6.9.15",
