@@ -35,7 +35,43 @@ class DataAnalyzer {
     
         return dateCountMap;
     }
+
+    findMaxValue(data: ResultRow[], key: string){
+
+        let maxValue = null;
     
+        for (let i = 0; i < data.length; i++) {
+            const value = data[i][key];
+            if (typeof value === 'number') {
+                if (maxValue === null) {
+                    maxValue = value;
+                } else {
+                    if (value > maxValue) {
+                        maxValue = value;
+                    }
+                }
+            }
+        }
+        return maxValue;
+    }
+
+    findMinValue(data: ResultRow[], key: string): number | null {
+        let minValue = null;
+    
+        for (let i = 0; i < data.length; i++) {
+            const value = data[i][key];
+            if (typeof value === 'number') {
+                if (minValue === null) {
+                    minValue = value;
+                } else {
+                    if (value < minValue) {
+                        minValue = value;
+                    }
+                }
+            }
+        }
+        return minValue;
+    }
 }
 
 export default new DataAnalyzer();
