@@ -2,7 +2,7 @@ import type { ResultRow } from "$lib/server/types/ResultRow";
 
 class DataAnalyzer {
 
-    calculateAverage(data: ResultRow[], key: string){
+    calculateAverage(data: ResultRow[], key: string): number | null{
         let total = 0;
         let count = 0;
     
@@ -36,7 +36,7 @@ class DataAnalyzer {
         return dateCountMap;
     }
 
-    findMaxValue(data: ResultRow[], key: string){
+    findMaxValue(data: ResultRow[], key: string): number | null{
 
         let maxValue = null;
     
@@ -72,6 +72,15 @@ class DataAnalyzer {
         }
         return minValue;
     }
+
+    countUniqueValues(data: ResultRow[], key: string): number {
+        const uniqueValues = new Set();
+        data.forEach(row => {
+            uniqueValues.add(row[key]);
+        });
+        return uniqueValues.size;
+    }
+    
 }
 
 export default new DataAnalyzer();
