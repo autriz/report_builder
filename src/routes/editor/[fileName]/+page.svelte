@@ -1,12 +1,5 @@
 <script lang="ts">
-	import * as Table from '$lib/components/ui/table';
-	import { TableCheckbox } from '$lib/components/ui/table';
-	import Button from '$lib/components/ui/button/button.svelte';
-	import { createTable, Render, Subscribe, createRender } from 'svelte-headless-table';
-	import ChevronDown from 'lucide-svelte/icons/chevron-down';
-	import ChevronUp from 'lucide-svelte/icons/chevron-up';
 	import { readable, writable } from 'svelte/store';
-	import { getUserState } from '$lib/userStore.svelte';
 	import VirtualList from 'svelte-tiny-virtual-list';
 	import type { ResultRow } from '$lib/types.js';
 

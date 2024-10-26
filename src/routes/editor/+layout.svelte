@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { getUserState } from '$lib/userStore.svelte';
+	import { getDBState, getUserState } from '$lib/userStore.svelte';
 	import { PlusCircle, Trash2 } from 'lucide-svelte';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
@@ -12,6 +12,11 @@
 	console.log(fileNames);
 
 	const { children } = $props();
+
+	let { getTransaction } = getDBState();
+
+	let objStore = getTransaction(['files_db'], 'readonly')?.objectStore('files_db');
+	objStore?.count('');
 </script>
 
 <div class="flex min-h-screen w-full flex-row">

@@ -8,7 +8,7 @@
 	import { DownloadCloud } from 'lucide-svelte';
 	// import { createUploader } from '$lib/utils/uploadthing';
 	// import { Uploader } from '@uploadthing/svelte';
-	import { getUserState, type Column } from '$lib/userStore.svelte';
+	import { getDBState, getUserState, type Column } from '$lib/userStore.svelte';
 	import Paparse from 'papaparse';
 	import { goto } from '$app/navigation';
 
@@ -21,15 +21,8 @@
 	// 	}
 	// });
 
-	enum State {
-		Input,
-		Table,
-		Report
-	}
-
 	let { state: userState, addFile } = getUserState();
-
-	let appState = $state(State.Input);
+	let { getTransaction } = getDBState();
 
 	let isParsing = $state(false);
 
@@ -46,6 +39,16 @@
 
 		let data: ResultRow[] = [];
 		let columns: Column[] = [];
+
+		let transaction = getTransaction(['files_db'], 'readwrite');
+		let objStore = transaction?.objectStore('files_db');
+		let query = objStore?.add({ name: fileName, data, columns });
+
+		query?.addEventListener('success', () => {});
+		transaction?.addEventListener('complete', () => {
+			goto(`/editor/${fileName}`);
+		});
+		transaction?.addEventListener('error', () => console.error('Transaction error'));
 
 		Paparse.parse<ResultRow, File>(fileList[0], {
 			dynamicTyping: true,
@@ -85,43 +88,43 @@
 			},
 			complete() {
 				let fileName = fileList[0].name.substring(0, fileList[0].name.lastIndexOf('.'));
-				console.log(fileName);
-				console.log({ data, columns });
-				addFile(fileName, { data, columns });
+				// console.log(fileName);
+				// console.log({ data, columns });
 
-				isParsing = false;
-				appState = State.Table;
+				let transaction = getTransaction(['files_db'], 'readwrite');
+				let objStore = transaction?.objectStore('files_db');
+				let query = objStore?.add({ name: fileName, data, columns });
 
-				goto(`/editor/${fileName}`);
+				query?.addEventListener('success', () => {});
+				transaction?.addEventListener('complete', () => {
+					goto(`/editor/${fileName}`);
+				});
+				transaction?.addEventListener('error', () => console.error('Transaction error'));
+
+				// addFile(fileName, { data, columns });
+
+				// isParsing = false;
+				// appState = State.Table;
+
+				// goto(`/editor/${fileName}`);
 			}
 		});
 	}
 </script>
 
 <div class="flex min-h-full min-w-full flex-col">
-	{#if appState === State.Table}
-		<!-- {#if $data.length > 0}
-			<TableEditor />
+	<Dropzone
+		{handleFiles}
+		disabled={isParsing}
+		acceptTypes={['application/vnd.ms-excel', 'text/csv', 'application/json']}
+		class="text-foreground/80 hover:text-foreground m-auto w-[30%]"
+	>
+		<DownloadCloud class="h-10 w-10" />
+		{#if !isParsing}
+			<p>Нажмите или перенесите файл(ы)</p>
 		{:else}
-			<p class="m-auto text-2xl">Не получилось обработать файл</p>
-		{/if} -->
-	{:else if appState === State.Report}
-		<p>todo</p>
-	{:else if appState === State.Input}
-		<Dropzone
-			{handleFiles}
-			disabled={isParsing}
-			acceptTypes={['application/vnd.ms-excel', 'text/csv', 'application/json']}
-			class="text-foreground/80 hover:text-foreground m-auto w-[30%]"
-		>
-			<DownloadCloud class="h-10 w-10" />
-			{#if !isParsing}
-				<p>Нажмите или перенесите файл(ы)</p>
-			{:else}
-				<p>Подождите...</p>
-			{/if}
-		</Dropzone>
-		<!-- <input type="file" autocomplete="off" bind:this={input} onchange={() => doThing()} max="1" /> -->
-	{/if}
+			<p>Подождите...</p>
+		{/if}
+	</Dropzone>
 </div>
 <!-- <Uploader {uploader} /> -->

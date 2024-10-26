@@ -14,6 +14,7 @@ export type ColumnType = string | number | Date;
 export type Files = { [key: string]: Data | undefined };
 
 let state: Writable<Files> = writable({});
+let dbState: Writable<IDBDatabase | undefined> = writable(undefined);
 
 function updateStorage() {
     sessionStorage.setItem("files", JSON.stringify(get(state)))
@@ -65,6 +66,14 @@ export function initUserState(data: any) {
     state.set(data);
 }
 
+function getTransaction(storeNames: string[], mode: IDBTransactionMode) {
+    return get(dbState)?.transaction(storeNames, mode);
+}
+
+export function initDBState(db: IDBDatabase) {
+    dbState.set(db);
+}
+
 function getUserState() {
     return {
         state,
@@ -76,10 +85,17 @@ function getUserState() {
     }
 }
 
+function getDBState() {
+    return {
+        dbState,
+        getTransaction,
+    }
+}
+
 function setUserState(newState: Files) {
     state.set(newState);
 
     updateStorage();
 }
 
-export { getUserState, setUserState };
+export { getUserState, setUserState, getDBState };
