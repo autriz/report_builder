@@ -1,8 +1,12 @@
-    import { Document, Packer, Table, TableCell, TableRow, Paragraph } from "docx";
-    import fs from "fs";
-    import path from "path";
-    import type TableRowData from "../../types/TableRowData";
-    import type FileHandler from "./FileHandler.interface";
+import { Document, Packer, Table, TableCell, TableRow, Paragraph } from "docx";
+import fs from "fs";
+import path from "path";
+import type TableRowData from "../../types/TableRowData";
+import type FileHandler from "./FileHandler.interface";
+import DataAnalyzer from "../calculations/DataAnalyzer";
+import ReportAnalyzer from "../calculations/ReportAnalyzer";
+import convertToResultRow from "$lib/server/types/convert/convertToResultRow";
+import convertToResultRowArray from "$lib/server/types/convert/convertToResultRowArray";
 
     class DOCXHandler implements FileHandler{
 
@@ -15,6 +19,30 @@
         }
 
         generate(data: TableRowData[], outputFileName: string) {
+
+            const dataAnalyzer = DataAnalyzer;
+            const reportAnalyzer = ReportAnalyzer;
+
+            function generateReport(data: TableRowData[]): Paragraph[] {
+                const uniqueEntities = reportAnalyzer.countStatusChangesByEntity(data);
+            
+                const uniqueEntityCount = uniqueEntities.size;
+            
+                const entityReport = Array.from(uniqueEntities.entries()).map(
+                    ([entityId, count]) => `Entity ID: ${entityId}, Количество изменений статуса: ${count}`
+                );
+            
+                const paragraphs = [
+                    new Paragraph(`Отчёт по данным:`),
+                    new Paragraph(`Уникальных Entity ID: ${uniqueEntityCount}`),
+                    new Paragraph(`---------------------------`),
+                    ...entityReport.map(entry => new Paragraph(entry)),
+                ];
+            
+                return paragraphs;
+            }
+            
+            
 
             const outputDir = path.resolve("output");
 
@@ -49,9 +77,14 @@
             const table = new Table({
                 rows: [tableHeaders, ...tableRows],
             });
+            
+            const reportParagraphs = generateReport(data);
 
             const doc = new Document({
                 sections: [
+                    {
+                        children:[...reportParagraphs]
+                    },
                     {
                         children: [table],
                     },
