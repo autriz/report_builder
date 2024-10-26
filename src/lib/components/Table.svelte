@@ -15,14 +15,16 @@
 		addSelectedRows,
 		addResizedColumns
 	} from 'svelte-headless-table/plugins';
+	import type { Column } from '$lib/userStore.svelte';
+	import type { ResultRow } from '$lib/types';
 
 	let {
 		data,
 		fields,
 		selectedDataIds = $bindable()
 	}: {
-		data: any[];
-		fields: string[];
+		data: ResultRow[];
+		fields: Column[];
 		selectedDataIds: (typeof pluginStates)['select']['selectedDataIds'];
 	} = $props();
 
@@ -63,12 +65,12 @@
 	fields.map((val) => {
 		columnsArray.push(
 			table.column({
-				accessor: val,
+				accessor: val.value,
 				plugins: {
 					sort: { invert: true },
 					resize: {}
 				},
-				header: (cell, state) => val
+				header: (cell, state) => val.value
 			})
 		);
 	});

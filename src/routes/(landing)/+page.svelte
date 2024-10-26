@@ -3,22 +3,23 @@
 </script>
 
 <script lang="ts">
-	import { enhance } from '$app/forms';
+	// import { enhance } from '$app/forms';
 	import Dropzone from '$lib/components/Dropzone.svelte';
 	import TableEditor from '$lib/components/TableEditor.svelte';
-	import { createUploader } from '$lib/utils/uploadthing';
 	import { DownloadCloud } from 'lucide-svelte';
-	import { Uploader } from '@uploadthing/svelte';
+	// import { createUploader } from '$lib/utils/uploadthing';
+	// import { Uploader } from '@uploadthing/svelte';
+	import { getUserState, type Column } from '$lib/userStore.svelte';
 	import Paparse from 'papaparse';
 
-	const uploader = createUploader('reportUploader', {
-		onClientUploadComplete: (res) => {
-			console.log(res[0]);
-		},
-		onUploadError: (err) => {
-			console.error(err);
-		}
-	});
+	// const uploader = createUploader('reportUploader', {
+	// 	onClientUploadComplete: (res) => {
+	// 		console.log(res[0]);
+	// 	},
+	// 	onUploadError: (err) => {
+	// 		console.error(err);
+	// 	}
+	// });
 
 	enum State {
 		Input,
@@ -26,14 +27,9 @@
 		Report
 	}
 
+	let data = getUserState();
+
 	let appState = $state(State.Input);
-
-	let input: HTMLInputElement | undefined = $state(undefined);
-	let files: File[] = $state([]);
-
-	let resultsState: ResultRow[] = $state([]);
-	let fields = $state<string[] | undefined>(undefined);
-	let fieldTypes = $state<('string' | 'number' | 'date')[] | undefined>(undefined);
 
 	let isParsing = $state(false);
 
@@ -43,30 +39,33 @@
 		else return false;
 	}
 
-	function doThing() {
+	async function handleFiles(fileList: File[]) {
 		isParsing = true;
-		resultsState = [];
-		fields = undefined;
-		fieldTypes = undefined;
 
-		Paparse.parse<ResultRow, File>(files[0], {
+		let parsedFields = false;
+
+		let data: ResultRow[] = [];
+		let columns: Column[] = [];
+
+		Paparse.parse<ResultRow, File>(fileList[0], {
 			dynamicTyping: true,
 			header: true,
 			step(results, parser) {
-				// results.data.forEach((value, idx) => {
-				// 	value = isValidDate(value) ? new Date(value) : value;
-				// });
 				Object.entries(results.data).forEach(([k, value], idx) => {
 					if (!Number.isInteger(value)) {
 						results.data[k] = isValidDate(value) ? new Date(value) : value;
 					}
 				});
 
-				resultsState.push(results.data);
+				data.push(results.data);
 
-				if (!fields) {
-					fields = results.meta.fields;
-					fieldTypes = fields?.map((field) => {
+				if (!parsedFields) {
+					if (!results.meta.fields) {
+						parser.abort();
+						return;
+					}
+
+					columns = results.meta.fields.map((field) => {
 						let type: 'string' | 'number' | 'object' | 'date' = typeof results.data[field] as
 							| 'string'
 							| 'number'
@@ -75,28 +74,26 @@
 						if (type === 'object') {
 							type = 'date';
 						}
-						return type;
+						return { value: field, column_type: type };
 					});
+
+					parsedFields = true;
 				}
 			},
 			complete() {
-				appState = State.Table;
+				$data.push({ data, columns });
+
 				isParsing = false;
+				appState = State.Table;
 			}
 		});
-	}
-
-	function handleFiles(fileList: File[]) {
-		files = fileList;
-
-		doThing();
 	}
 </script>
 
 <div class="flex min-h-full min-w-full flex-col">
 	{#if appState === State.Table}
-		{#if resultsState && fields}
-			<TableEditor data={resultsState} {fields} />
+		{#if $data.length > 0}
+			<TableEditor />
 		{:else}
 			<p class="m-auto text-2xl">Не получилось обработать файл</p>
 		{/if}

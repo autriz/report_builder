@@ -4,6 +4,8 @@
 	import '../app.css';
 	import { ModeWatcher, mode, toggleMode } from 'mode-watcher';
 
+	import { setUserState } from '$lib/userStore.svelte';
+
 	let { children, data } = $props();
 </script>
 

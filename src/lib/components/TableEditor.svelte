@@ -3,14 +3,15 @@
 	import SettingSection from './SettingSection.svelte';
 	import Table from './Table.svelte';
 	import { Button } from './ui/button';
+	import { getUserState } from '$lib/userStore.svelte';
 
-	const { data, fields }: { data: ResultRow[]; fields: string[] } = $props();
+	let data = getUserState();
 
 	let selectedDataIds: any = $state();
 </script>
 
 <div class="flex flex-row pl-3">
-	<Table {data} {fields} bind:selectedDataIds />
+	<Table data={$data[0].data} fields={$data[0].columns} bind:selectedDataIds />
 	<div class="h-full w-fit grow">
 		<!-- <SettingSection>
 			<Button variant="default" class="text-md">Add another file</Button>
