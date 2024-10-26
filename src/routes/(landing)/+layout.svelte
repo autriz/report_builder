@@ -4,7 +4,7 @@
 	let { children, data } = $props();
 </script>
 
-<Header user={data.user} />
+<!-- <Header user={data.user} /> -->
 <div class="flex flex-1">
 	{@render children()}
 </div>

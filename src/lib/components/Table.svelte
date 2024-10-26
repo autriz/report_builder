@@ -10,6 +10,7 @@
 		addPagination,
 		addSortBy,
 		addColumnOrder,
+		addHiddenColumns,
 		addTableFilter,
 		addSelectedRows,
 		addResizedColumns
@@ -28,6 +29,7 @@
 		select: addSelectedRows({
 			initialSelectedDataIds: {}
 		}),
+		hide: addHiddenColumns(),
 		colOrder: addColumnOrder(),
 		resize: addResizedColumns()
 	});
@@ -56,24 +58,56 @@
 				accessor: val,
 				plugins: {
 					sort: { invert: true },
-					resize: { disable: true }
+					resize: {}
 				},
 				header: (cell, state) => val
 			})
 		);
 	});
 
-	const { tableAttrs, headerRows, tableBodyAttrs, pageRows, pluginStates } =
+	const { tableAttrs, headerRows, tableBodyAttrs, pageRows, pluginStates, flatColumns } =
 		table.createViewModel(columnsArray);
 
 	const { selectedDataIds } = pluginStates.select;
+	const { sortKeys } = pluginStates.sort;
+	const { hiddenColumnIds } = pluginStates.hide;
 	const { pageIndex, pageCount, pageSize, hasPreviousPage, hasNextPage } = pluginStates.page;
+
+	const ids = flatColumns.map((col) => col.id);
+	let hideForId = $state(Object.fromEntries(ids.map((id) => [id, true])));
+
+	$effect(() => {
+		$hiddenColumnIds = Object.entries(hideForId)
+			.filter(([_, hide]) => !hide)
+			.map(([id, _]) => id);
+	});
 
 	console.log($headerRows);
 </script>
 
-<div class="flex max-w-[900px] flex-col">
-	<div class="rounded-md border">
+<div class="flex w-[1400px] flex-col">
+	<div class="flex items-center justify-end space-x-2 py-4">
+		<div class="text-muted-foreground flex-1 text-sm">
+			{$pageIndex + 1} из {$pageCount} страниц.
+		</div>
+		<Button
+			variant="outline"
+			size="sm"
+			onclick={() => ($pageIndex = $pageIndex - 1)}
+			disabled={!$hasPreviousPage}
+		>
+			Предыдущий
+		</Button>
+		<Button
+			variant="outline"
+			size="sm"
+			disabled={!$hasNextPage}
+			onclick={() => ($pageIndex = $pageIndex + 1)}
+		>
+			Следующий
+		</Button>
+	</div>
+	<div class="overflow-y-auto rounded-md border">
 		<Table.Root {...$tableAttrs}>
 			<Table.Header>
 				{#each $headerRows as headerRow}
@@ -88,18 +122,20 @@
 							{#each headerRow.cells as cell (cell.id)}
 								<Subscribe attrs={cell.attrs()} let:attrs props={cell.props()} let:props>
 									{props.select}
-									<th {...attrs} on:click={props.sort.toggle}>
-										<Render of={cell.render()} />
-										{#if props.sort.order === 'asc'}
-											<ChevronDown class="h-4 w-4" />
-										{:else if props.sort.order === 'desc'}
-											<ChevronUp class="h-4 w-4" />
+									<Table.Head {...attrs}>
+										{#if !props.sort.disabled}
+											<Button variant="ghost" onclick={props.sort.toggle}>
+												<Render of={cell.render()} />
+												{#if props.sort.order === 'asc'}
+													<ChevronDown class="h-4 w-4" />
+												{:else if props.sort.order === 'desc'}
+													<ChevronUp class="h-4 w-4" />
+												{/if}
+											</Button>
+										{:else}
+											<Render of={cell.render()} />
 										{/if}
-										{#if !props.resize.disabled}
-											<!-- <Table.Resizer/> -->
-											<div class="resizer" use:props.resize.drag></div>
-										{/if}
-									</th>
+									</Table.Head>
 								</Subscribe>
 							{/each}
 						</Table.Row>
@@ -109,11 +145,11 @@
 			<Table.Body {...$tableBodyAttrs}>
 				{#each $pageRows as row (row.id)}
 					<Subscribe rowAttrs={row.attrs()} let:rowAttrs rowProps={row.props()} let:rowProps>
-						<tr {...rowAttrs} class:selected={rowProps.select.selected}></tr>
+						<!-- <tr {...rowAttrs} class:selected={rowProps.select.selected}></tr> -->
 						<Table.Row {...rowAttrs} data-state={$selectedDataIds[row.id] && 'selected'}>
 							{#each row.cells as cell (cell.id)}
 								<Subscribe attrs={cell.attrs()} let:attrs>
-									<Table.Cell {...attrs}>
+									<Table.Cell {...attrs} class="max-h-[120px]">
 										<Render of={cell.render()} />
 									</Table.Cell>
 								</Subscribe>
@@ -123,27 +159,5 @@
 				{/each}
 			</Table.Body>
 		</Table.Root>
-	</div>
-
-	<div class="flex items-center justify-end space-x-2 py-4">
-		<div class="text-muted-foreground flex-1 text-sm">
-			{$pageIndex + 1} of {$pageCount} row(s) selected.
-		</div>
-		<Button
-			variant="outline"
-			size="sm"
-			onclick={() => ($pageIndex = $pageIndex - 1)}
-			disabled={!$hasPreviousPage}
-		>
-			Previous
-		</Button>
-		<Button
-			variant="outline"
-			size="sm"
-			disabled={!$hasNextPage}
-			onclick={() => ($pageIndex = $pageIndex + 1)}
-		>
-			Next
-		</Button>
 	</div>
 </div>
