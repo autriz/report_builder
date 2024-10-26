@@ -13,6 +13,11 @@ class ReportAnalyzer {
         return countMap;
     }
 
+        //Количество изменений статуса, где конечный статус - "Отклонен исполнителем"
+        countDeclinedStatusChanges(data: TableRowData[]): number {
+            return data.filter(row => row.new_value === "Отклонен исполнителем").length;
+        }
+
 }
 
-export default new ReportAnalyzer;
+export default new ReportAnalyzer();
