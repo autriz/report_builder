@@ -6,6 +6,8 @@ import Footer from "./table-footer.svelte";
 import Head from "./table-head.svelte";
 import Header from "./table-header.svelte";
 import Row from "./table-row.svelte";
+import SelectIndicator from "./table-select-Indicator.svelte";
+import Resizer from "./table-resizer.svelte"
 
 export {
 	Root,
@@ -16,6 +18,9 @@ export {
 	Head,
 	Header,
 	Row,
+	SelectIndicator,
+	Resizer,
+
 	//
 	Root as Table,
 	Body as TableBody,
@@ -25,4 +30,5 @@ export {
 	Head as TableHead,
 	Header as TableHeader,
 	Row as TableRow,
+	Resizer as Rowresizer
 };
