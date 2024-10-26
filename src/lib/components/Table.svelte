@@ -6,6 +6,9 @@
 	import ChevronDown from 'lucide-svelte/icons/chevron-down';
 	import ChevronUp from 'lucide-svelte/icons/chevron-up';
 	import { readable, writable } from 'svelte/store';
+	import type { Column } from '$lib/userStore.svelte';
+	import type { ResultRow } from '$lib/types';
+	
 	import {
 		addPagination,
 		addSortBy,
@@ -15,16 +18,15 @@
 		addSelectedRows,
 		addResizedColumns
 	} from 'svelte-headless-table/plugins';
-	import { Inspect } from 'lucide-svelte';
-	import { object } from 'zod';
+
 
 	let {
 		data,
 		fields,
 		selectedDataIds = $bindable()
 	}: {
-		data: any[];
-		fields: string[];
+		data: ResultRow[];
+		fields: Column[];
 		selectedDataIds: (typeof pluginStates)['select']['selectedDataIds'];
 	} = $props();
 
@@ -65,12 +67,12 @@
 	fields.map((val) => {
 		columnsArray.push(
 			table.column({
-				accessor: val,
+				accessor: val.value,
 				plugins: {
 					sort: { invert: true },
 					resize: {}
 				},
-				header: (cell, state) => val
+				header: (cell, state) => val.value
 			})
 		);
 	});
