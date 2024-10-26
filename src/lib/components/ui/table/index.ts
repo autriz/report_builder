@@ -6,6 +6,7 @@ import Footer from "./table-footer.svelte";
 import Head from "./table-head.svelte";
 import Header from "./table-header.svelte";
 import Row from "./table-row.svelte";
+import TableCheckbox from "./table-checkbox.svelte";
 import SelectIndicator from "./table-select-Indicator.svelte";
 import Resizer from "./table-resizer.svelte"
 
@@ -18,6 +19,7 @@ export {
 	Head,
 	Header,
 	Row,
+	TableCheckbox,
 	SelectIndicator,
 	Resizer,
 
