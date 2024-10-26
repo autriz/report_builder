@@ -54,6 +54,7 @@
 		"papaparse": "^5.4.1",
 		"pnpm": "^9.12.2",
 		"svelte-headless-table": "^0.18.2",
+		"svelte-tiny-virtual-list": "^2.1.2",
 		"uploadthing": "^7.2.0",
 		"zod": "^3.23.8"
 	}

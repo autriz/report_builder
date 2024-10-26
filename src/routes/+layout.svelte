@@ -3,10 +3,22 @@
 	import { Moon, Sun } from 'lucide-svelte';
 	import '../app.css';
 	import { ModeWatcher, mode, toggleMode } from 'mode-watcher';
-
-	import { setUserState } from '$lib/userStore.svelte';
+	import { initUserState } from '$lib/userStore.svelte';
+	import { onMount } from 'svelte';
 
 	let { children, data } = $props();
+
+	onMount(() => {
+		let storage = sessionStorage.getItem('files');
+
+		if (!storage) {
+			sessionStorage.setItem('files', JSON.stringify({}));
+
+			initUserState({});
+		} else {
+			initUserState(JSON.parse(storage));
+		}
+	});
 </script>
 
 <ModeWatcher defaultMode="system" themeStorageKey="color-theme" />

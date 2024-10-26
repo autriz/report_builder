@@ -5,12 +5,12 @@
 <script lang="ts">
 	// import { enhance } from '$app/forms';
 	import Dropzone from '$lib/components/Dropzone.svelte';
-	import TableEditor from '$lib/components/TableEditor.svelte';
 	import { DownloadCloud } from 'lucide-svelte';
 	// import { createUploader } from '$lib/utils/uploadthing';
 	// import { Uploader } from '@uploadthing/svelte';
 	import { getUserState, type Column } from '$lib/userStore.svelte';
 	import Paparse from 'papaparse';
+	import { goto } from '$app/navigation';
 
 	// const uploader = createUploader('reportUploader', {
 	// 	onClientUploadComplete: (res) => {
@@ -27,7 +27,7 @@
 		Report
 	}
 
-	let data = getUserState();
+	let { state: userState, addFile } = getUserState();
 
 	let appState = $state(State.Input);
 
@@ -50,6 +50,9 @@
 		Paparse.parse<ResultRow, File>(fileList[0], {
 			dynamicTyping: true,
 			header: true,
+			error(error, file) {
+				parsedFields = true;
+			},
 			step(results, parser) {
 				Object.entries(results.data).forEach(([k, value], idx) => {
 					if (!Number.isInteger(value)) {
@@ -81,10 +84,15 @@
 				}
 			},
 			complete() {
-				$data.push({ data, columns });
+				let fileName = fileList[0].name.substring(0, fileList[0].name.lastIndexOf('.'));
+				console.log(fileName);
+				console.log({ data, columns });
+				addFile(fileName, { data, columns });
 
 				isParsing = false;
 				appState = State.Table;
+
+				goto(`/editor/${fileName}`);
 			}
 		});
 	}
@@ -92,11 +100,11 @@
 
 <div class="flex min-h-full min-w-full flex-col">
 	{#if appState === State.Table}
-		{#if $data.length > 0}
+		<!-- {#if $data.length > 0}
 			<TableEditor />
 		{:else}
 			<p class="m-auto text-2xl">Не получилось обработать файл</p>
-		{/if}
+		{/if} -->
 	{:else if appState === State.Report}
 		<p>todo</p>
 	{:else if appState === State.Input}

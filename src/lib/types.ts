@@ -1,1 +1,1 @@
-export type ResultRow = { [key: string[number]]: string | number | Date };
+export type ResultRow = { [key: string]: string | number | Date };

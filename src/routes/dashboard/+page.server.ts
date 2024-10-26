@@ -6,7 +6,7 @@ import { redirect } from "@sveltejs/kit";
 export const load: PageServerLoad = async () => {
     let data = getUserState();
 
-    if (get(data).length === 0) {
-        redirect(302, "/");
-    }
+    // if (get(data).length === 0) {
+    //     redirect(302, "/");
+    // }
 };

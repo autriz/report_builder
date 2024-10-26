@@ -50,6 +50,9 @@ importers:
       svelte-headless-table:
         specifier: ^0.18.2
         version: 0.18.2(svelte@5.1.0)
+      svelte-tiny-virtual-list:
+        specifier: ^2.1.2
+        version: 2.1.2
       uploadthing:
         specifier: ^7.2.0
         version: 7.2.0(tailwindcss@3.4.14)
@@ -2458,6 +2461,9 @@ packages:
     peerDependencies:
       svelte: ^4.0.0
 
+  svelte-tiny-virtual-list@2.1.2:
+    resolution: {integrity: sha512-jeP/WMvgFUR4mYXHGPiCexjX5DuzSO+3xzHNhxfcsFyy+uYPtnqI5UGb383swpzQAyXB0OBqYfzpYihD/5gxnA==}
+
   svelte@5.1.0:
     resolution: {integrity: sha512-qD0pUvL3P26Vx+K1VodZROSu7MjDHFDunEVZ+2d3LUDWHyYI87AJFOIws0HufKWHDgXbPO4FCSugmysnX4LDwA==}
     engines: {node: '>=18'}
@@ -4762,6 +4768,8 @@ snapshots:
   svelte-subscribe@2.0.1(svelte@5.1.0):
     dependencies:
       svelte: 5.1.0
+
+  svelte-tiny-virtual-list@2.1.2: {}
 
   svelte@5.1.0:
     dependencies:
